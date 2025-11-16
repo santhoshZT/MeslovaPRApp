@@ -1,325 +1,447 @@
-# Procurement Management System -- Technical Documentation
-
-## 1. Introduction
-
-### 1.1 Purpose
-
-This document provides a clear explanation of the Procurement Management
-System architecture, workflow, and all data models. It includes model
-purpose, relationships, and a text-based architecture diagram.
-
-### 1.2 Scope
-
-The scope includes: - Procurement Models - Enquiry Models - Vendor
-Quotation Models - CST Models - Negotiation Models - PO/DPO Models -
-Payment & Invoice Models - Workflow (StageProgress) Models
-
-Only models explicitly provided are included.
-
-## 2. System Architecture
-
-### 2.1 Architecture Diagram (ASCII -- GitHub Compatible)
-
-                       [UserReg]
-                           |
-                           v
-                    [Procurement]
-                           |
-         ---------------------------------------------
-         |                   |                       |
-         v                   v                       v
-    [Particular]     [BudgetAllocation]      [StageProgress]
-         |                                             |
-         v                              ------------------------------
-    [Quantity]                      [Tracking]                 [Rejection]
-         |
-         v
-       [Units]
-
-
-    Procurement ---> Enquiry
-                        |
-                        v
-                 [EnquiryFormPR]
-                        |
-                        v
-               [EnquirySupplierPR]
-                        |
-                        v
-                     [Vendor]
-                        |
-                        v
-               [VendorQuotations]
-                        |
-                        v
-           ---------------------------
-           |                         |
-           v                         v
-    [QuotationParticular]   [QuotationQuantity]
-
-
-                Comparative Statement Flow
-                ---------------------------
-                        |
-                        v
-            [ComparativeStatement]
-                        |
-                        v
-            [VendorQuotationDetails]
-
-
-                Negotiation Flow
-                ---------------------------
-                        |
-                        v
-                  [Negotiation]
-                        |
-                        v
-                [DPOParticular]
-                        |
-                        v
-                [Purchase_Order]
-                        |
-                        v
-                  [PaymentData]
-                        |
-                        v
-                [PaymentTracking]
-               /                  \
-              v                    v
-       [PaymentFile]         [Invoice_Files]
-
-## 3. Model Documentation (Standard Format)
-
-### 3.1 UserReg
-
-**Purpose:** Stores employee details and defines approval hierarchy.
-**Responsibilities:**
-- Maintain user metadata
-- Support workflow and approvals
-
-### 3.2 Procurement
-
-**Purpose:** Central model for Purchase Requisitions (PR).
-**Responsibilities:**
-- Manage procurement request data
-- Link requester, project, and category
-- Control workflow via StageProgress
-
-### 3.3 Particular
-
-**Purpose:** Item description for each PR.
-
-### 3.4 Quantity
-
-**Purpose:** Quantity of each item under Particular.
-
-### 3.5 Units
-
-**Purpose:** Unit of measurement for quantities.
-
-### 3.6 BudgetAllocation
-
-**Purpose:** Stores budget allocation details for PRs.
-
-### 3.7 StageProgress
-
-**Purpose:** Tracks workflow stages for Procurement.\
-**Responsibilities:**
-- Maintain status history
-- Track approvers and timestamps
-
-### 3.8 Tracking
-
-**Purpose:** Logs workflow actions for auditing.
-
-### 3.9 Rejection
-
-**Purpose:** Stores rejection details and remarks.
-
-## 4. Enquiry Workflow Models
-
-### 4.1 EnquiryFormPR
-
-**Purpose:** Represents enquiry generated from PR.
-
-### 4.2 EnquirySupplierPR
-
-**Purpose:** Vendor assignments for enquiry.
-
-## 5. Vendor Management Models
-
-### 5.1 Vendor
-
-**Purpose:** Vendor master details.
-
-## 6. Quotation Models
-
-### 6.1 VendorQuotations
-
-**Purpose:** Stores vendor quotation header data.
-
-### 6.2 QuotationParticular
-
-**Purpose:** Stores item-level quotation details.
-
-### 6.3 QuotationQuantity
-
-**Purpose:** Price & quantity details for quotation items.
-
-## 7. Comparative Statement (CST) Models
-
-### 7.1 ComparativeStatement
-
-**Purpose:** Compares all vendor quotations for an enquiry.
-
-### 7.2 VendorQuotationDetails
-
-**Purpose:** Detailed comparison per vendor per item.
-
-## 8. Negotiation Models
-
-### 8.1 Negotiation
-
-**Purpose:** Stores negotiation outcomes and revised prices.
-
-### 8.2 DPOParticular
-
-**Purpose:** Items selected for DPO after negotiation.
-
-## 9. Purchase Order & Payment Models
-
-### 9.1 Purchase_Order
-
-**Purpose:** Represents final PO after negotiation.
-
-### 9.2 PaymentData
-
-**Purpose:** Payment initiation details for PO.
-
-### 9.3 PaymentTracking
-
-**Purpose:** Tracks payment stages and statuses.
-
-### 9.4 PaymentFile
-
-**Purpose:** Stores payment proofs.
-
-### 9.5 Invoice_Files
-
-**Purpose:** Stores vendor invoices.
-
-
-# PR Creation Prerequisites & Workflow
-
-## 1. Prerequisites for Generating a Purchase Requisition (PR)
-
-Before creating a PR, the following master data must be configured:
-
-### Step 1 -- Create Roles
-
-Required approval hierarchy roles: - Indentor - Recommending Authority
-(RA) - IMM - Accounts - Approving Authority
-
-### Step 2 -- Create Departments
-
-Each department must include: - Department Name - Department Code
-
-### Step 3 -- Create Delivery Types
-
-Configure: - Delivery Name
-
-### Step 4 -- Create Procurement Types
-
-Include: - Procurement Code - Procurement Name
-
-### Step 5 -- Create Locations
-
-Define the full list of applicable locations.
-
-### Step 6 -- Create Tender Types
-
-Setup tender type master data.
-
-### Step 7 -- Create Source of Make
-
-Each source requires: - Source Code - Source Type
-
-### Step 8 -- Create Units
-
-Add all required units of measurement (UOM).
-
-------------------------------------------------------------------------
-
-## 2. Purchase Requisition (PR) Generation Workflow
-
-### 1. PR Creation (Indentor)
-
--   The Indentor initiates the PR and fills all required fields in the
-    PR Form.
-
-### 2. Review by Recommending Authority (RA)
-
--   After submission, the PR moves to the RA for verification and
-    approval.
-
-### 3. RA Approval
-
--   RA reviews the details and approves the PR.
-
-### 4. PR Forwarded to IMM
-
--   After RA approval, the PR is sent to the IMM department for further
-    processing.
-
-### 5. IMM Review
-
--   IMM reviews the form and forwards it to the Accounts role.
-
-### 6. Accounts Review
-
--   Accounts verifies the PR and recommends it to the Approving
-    Authority.
-
-### 7. Return & Modification Rules
-
--   Any higher authority can return the PR to a lower authority.
--   Only the Indentor (original creator) can make modifications.
-
-### 8. Enquiry Form Generation
-
--   After approval, IMM generates the Enquiry Form.
--   Vendor quotations are uploaded in this stage.
-
-### 9. CST Generation
-
--   The Comparative Statement (CST) is generated.
--   CST is approved by IMM and recommended to the Indentor.
-
-### 10. Indentor Review
-
--   Indentor reviews CST and recommends it to RA.
--   If negotiation is required, Indentor triggers negotiation.
-
-### 11. RA Review
-
--   RA reviews and submits the form, recommending it to IMM.
-
-### 12. Negotiation or DPO Creation
-
--   If negotiation occurs OR if RA submits, the PR moves to the DPO
-    (Draft PO) stage.
-
-### 13. IMM Review for DPO
-
--   IMM reviews the DPO and recommends it to Accounts.
-
-### 14. Accounts Approval
-
--   Accounts approves the DPO and cycle may repeat if required.
-
-### 15. Final PO Approval & Sign Upload
-
--   After final PO approval, the designated user uploads the approved
-    and signed copy.
-
+# IMS v2.0 – Integrated Material Management System
+
+### Overview
+IMS v2.0 digitizes all procurement operations including vendor onboarding, approvals, comparative statements, negotiations, purchase order issuance, and budget tracking. It ensures transparency, traceability, and compliance through automated workflows and role-based access control.
+
+### System Modules & Descriptions
+
+#### 1. Vendor Registration
+Manages vendor onboarding and documentation.  
+- Create/update vendor profiles  
+- Source category: Import / Indigenous  
+- Upload GST, certificates, compliance documents  
+
+#### 2. User Registration
+Handles user creation managed by IMM.  
+- Captures Name, Employee ID, Department, Email, Phone  
+- Role assignment: Indentor, RA, IMM, Accounts, Approving Authority  
+- Secured password storage  
+
+#### 3. Dashboards
+
+#### 3.1 Indentor / RA / AA Dashboard
+- Procurement status overview  
+- Workflow tracking: Enquiry → CST → Negotiation → DPO → PO → Delivery  
+- Budget visibility for AA: Available, Allocated, Spent  
+- Top 5 vendors by PO counts  
+- Project-based filtering and procurement charts  
+
+#### 3.2 IMM Dashboard
+- System-wide totals: Vendors, Projects, Procurements  
+- Breakdown by procurement stage  
+- Top vendors by PO count  
+- Doughnut charts for In-progress / Approved / Delivered  
+
+#### 3.3 Accounts Dashboard
+- FY-based summary: Projects, Available, Allocated, Spent  
+- Budget: FY → Quarter → Month  
+- Monthly values: Planned (PR), Committed (PO), Expenditure (Delivered)  
+- Drill-down procurement table  
+- Filters: All / Import / Indigenous  
+
+---
+
+#### 4. Procurement Workflow (End-to-End)
+
+#### Stage Flow
+1. PR Raised  
+2. RA → IMM → Accounts → Approving Authority  
+3. Enquiry Generation  
+4. Vendor Quotations  
+5. CST Preparation  
+6. Recommendations  
+7. Negotiation (Optional)  
+8. Draft Purchase Order  
+9. Accounts & AA Approval  
+10. Purchase Order  
+11. Delivery Tracking  
+
+#### Rules
+- Any authority may return the PR to any lower role  
+- Only Indentor can modify the PR  
+
+---
+### Procurement Workflow
+
+```mermaid
+flowchart TD
+    A[Indenter Raises PR] --> B[RA Review]
+    B -->|Approve| C[IMM Validation]
+    B -->|Return| A
+
+    C --> D[Accounts Budget Check]
+    D -->|Approve| E[Approving Authority Approval]
+    D -->|Return| C
+
+    E -->|Approve| F[Procurement Approved]
+    E -->|Return| A
+```
+#### Descriptions:
+- Indentor: Submits PR
+- RA: Validates
+- IMM: Technical review
+- Accounts: Budget check
+- AA: Final approval
+
+#### **1. PR Creation**
+- The **Indentor** fills and submits the PR Form with all required details.
+
+#### **2. RA Review**
+- The PR is routed to the **Recommending Authority (RA)** for validation and approval.
+
+#### **3. IMM Processing**
+- After RA approval, the PR moves to **IMM** for technical review and recommendation to Accounts.
+
+### **4. Accounts Review**
+- Accounts verifies financial aspects and forwards it to **Approving Authority**.
+
+#### **5. Return Conditions**
+- Any higher authority can *return* to any lower authority.
+- **Only the Indentor** can modify the PR.
+
+#### **6. Enquiry Generation**
+
+```mermaid
+flowchart TD
+    A[Procurement Approved] --> B[IMM Selects Vendors]
+    B --> C[Generate Enquiry Form]
+    C --> D[Vendor Quotation Upload]
+    D --> E{All Vendors Respond?}
+    E -->|Yes| F[Proceed to CST]
+    E -->|No| F
+```
+#### Description
+- IMM generates the **Enquiry Form**.
+- Vendor quotations are uploaded.
+  
+
+#### **7. CST (Comparative Statement)**
+```mermaid
+  flowchart TD
+    A[Quotations Received] --> B[Generate CST]
+    B --> C{Single Vendor?}
+    C -->|Yes| D[Single Vendor CST]
+    C -->|No| E[Multi-Vendor Comparison]
+
+    D --> F[Indenter Approval]
+    E --> F
+    F --> G[RA Approval]
+    G --> H[Proceed to Negotiation/DPO]
+```
+- IMM prepares the CST and recommends it to the **Indentor**.
+
+#### **8. Indentor Review**
+
+```mermaid
+flowchart TD
+    A[Negotiation Needed] --> B[IMM Inputs Negotiation Data]
+    B --> C[RA Approval]
+    C --> D[AA Final Approval]
+    D --> E[Negotiation Finalized]
+```
+
+- Indentor reviews CST and forwards to RA.
+- Negotiation request can be initiated if required.
+  
+
+#### **9. RA Submission**
+- RA reviews and submits the form to IMM.
+
+#### **10. DPO (Draft Purchase Order)**
+
+```mermaid
+flowchart TD
+    A[CST/Negotiation Completed] --> B[Generate DPO]
+    B --> C[Accounts Approval]
+    C --> D[Approving Authority Approval]
+    D --> E[DPO Finalized]
+    E --> F[Generate PO]
+    F --> G[PO Download Available]
+```
+- Upon negotiation or RA submission, it moves to **DPO Stage**.
+
+#### **11. IMM Approval → Accounts**
+- IMM approves and sends to Accounts.
+
+#### **12. Accounts Approval**
+- If approved, the process repeats for remaining items (if any).
+
+#### **13. Final PO Approval**
+- PO is approved.
+- Any forwarded user must upload the signed copy.
+
+### 5. Functional Components
+
+#### 5.1 Enquiry Form Generation
+- Generated after procurement approval.
+- IMM can add extra vendors.
+- Quotation upload per vendor (optional).
+- Download enquiry form + all documents.
+
+#### 5.2 Comparative Statement (CST)
+- Created only for vendors who uploaded quotations.
+- Alerts for missing quotations.
+- Single vendor mode supported.
+- Ranking based on:
+  - Lowest price
+  - Delivery time
+- Must be recommended by Indentor & RA.
+
+#### 5.3 Negotiation
+- Triggered only if Indentor & RA decide.
+- IMM submits negotiated values.
+- RA + Approving Authority approval mandatory.
+- Downloadable negotiation form.
+
+#### 5.4 Draft Purchase Order (DPO)
+- Shows CST or negotiated values.
+- Editable fields: Discount & GST.
+- Delivery timeline (weeks) & warranty (months).
+- RI → Accounts → Approving Authority approval.
+- Downloadable DPO.
+
+#### 5.5 Purchase Order (PO)
+- Auto-generated 9-digit PO number:
+  - Digit 1: Source (1 Indigenous, 2 Import)
+  - Digit 2–4: Project Code
+  - Digit 5–7: Serial Number
+  - Digit 8–9: Financial Year
+- Downloadable PO.
+
+---
+
+### 6. Budget Allocation & Tracking Module
+
+#### Key Features
+- Allocate budgets per project per FY.
+- Increase/Decrease budgets anytime.
+- Monthly visualization of:
+  - Planned  
+  - Committed  
+  - Expenditure  
+- Import/Indigenous filters.
+- Complete audit log:
+  - Change timestamp
+  - User
+  - Reason for modification
+
+---
+
+### 7. System Models (Entity Definitions)
+
+#### **Vendor**
+- vendor_id  
+- name  
+- address  
+- email  
+- phone  
+- source_of_make (Import/Indigenous)  
+- documents  
+
+#### **User**
+- user_id  
+- name  
+- employee_id  
+- department  
+- role  
+- email  
+- phone  
+- password_hash  
+
+#### **Project**
+- project_id  
+- project_code  
+- name  
+- budget_allocations (relationship)
+
+#### **Procurement**
+- procurement_id  
+- project_id  
+- created_by  
+- status  
+- source_of_make  
+- amount  
+
+#### **Quotation**
+- quotation_id  
+- procurement_id  
+- vendor_id  
+- amount  
+- delivery_time  
+- attached_files  
+
+#### **CST**
+- cst_id  
+- procurement_id  
+- vendor_rankings  
+
+#### **Negotiation**
+- negotiation_id  
+- procurement_id  
+- negotiated_amount  
+- negotiated_delivery_time  
+
+#### **DPO**
+- dpo_id  
+- procurement_id  
+- amount  
+- gst  
+- discount  
+- delivery_time  
+- warranty  
+
+#### **PO**
+- po_id  
+- procurement_id  
+- po_number  
+
+#### **Budget Allocation**
+- allocation_id  
+- project_id  
+- financial_year  
+- allocated_amount  
+- spent_amount  
+- audit_logs (relationship)
+
+---
+
+### 8. Entity Relationship Summary
+
+**Project**  
+→ has many **Procurements**  
+→ has many **Budget Allocations**
+
+**Procurement**  
+→ belongs to **Project**  
+→ has many **Quotations**  
+→ has one **CST**  
+→ has one **Negotiation**  
+→ has one **DPO**  
+→ has one **PO**
+
+**Vendor**  
+→ provides many **Quotations**
+
+**User**  
+→ creates **Procurement**  
+→ performs approvals at various stages  
+
+---
+
+### 9. Process Flow Diagram
+
+```mermaid
+flowchart TD
+  A[PR Raised - Indentor] --> B[RA Review]
+  B --> C[IMM Review]
+  C --> D[Accounts Review]
+  D --> E[Approving Authority]
+  E --> F[Enquiry Form Generation]
+  F --> G[Vendor Quotation Upload]
+  G --> H[CST Generation]
+  H --> I[Indentor Recommendation]
+  I --> J[RA Recommendation]
+  J --> K{Negotiation Required?}
+  K -- Yes --> L[Negotiation Form by IMM]
+  L --> M[RA Approval for Negotiation]
+  M --> N[AA Approval]
+  N --> O[DPO Creation]
+  K -- No --> O
+  O --> P[Accounts Approval]
+  P --> Q[AA Approval]
+  Q --> R[Purchase Order Generation]
+  R --> S[Vendor Delivery]
+  S --> T[Quantity & Quality Checks]
+  T --> U[Payment Tracking & Invoice Upload]
+  U --> V[Budget Expenditure Updated]
+```
+
+### 10. System Flow Diagram
+
+```mermaid
+flowchart LR
+
+    subgraph Client["Client Browser"]
+        UI["Django Templates (HTML)"]
+    end
+
+    UI --> View["Django Views (Controllers)"]
+    View --> Service["Business Logic Layer (Services)"]
+    Service --> ORM["Django ORM"]
+    ORM --> DB["PostgreSQL"]
+
+    %% Supporting Internal Components
+    View --> FileStore["File Storage (Local / Cloud)"]
+    View --> Auth["Django Auth System"]
+    View --> Email["Email/SMS Notifications"]
+
+    %% Dashboards
+    subgraph Dashboards["Dashboard Modules"]
+        IndDash["Indenter / RA / AA Dashboard"]
+        IMMDash["IMM Dashboard"]
+        AccDash["Accounts Dashboard"]
+    end
+
+    UI --> IndDash
+    UI --> IMMDash
+    UI --> AccDash
+
+    %% Domain Modules
+    Service --> Procurement["Procurement Workflow Module"]
+    Service --> Tracking["Stage Tracking Module"]
+    Service --> Budget["Budget Allocation & Audit Logs"]
+    Service --> Vendor["Vendor Management & Quotations"]
+    Service --> POSys["DPO / Purchase Order Module"]
+
+```
+
+### 11. Data Relationship Flow Diagram
+
+This ER-style diagram 
+
+```mermaid
+erDiagram
+    USER ||--o{ PROCUREMENT : creates
+    USER {
+        int id
+        string name
+        string role
+        string department
+    }
+
+    PROCUREMENT ||--o{ ENQUIRY : generates
+    PROCUREMENT {
+        int id
+        string project
+        float amount
+        string status
+    }
+
+    ENQUIRY ||--o{ QUOTATION : responds
+    VENDOR ||--o{ QUOTATION : submits
+    VENDOR {
+        int id
+        string name
+        string type
+    }
+
+    PROCUREMENT ||--o{ CST : compares
+    CST ||--o{ NEGOTIATION : finalizes
+    NEGOTIATION ||--|| DPO : influences
+    DPO ||--|| PO : produces
+
+    PROJECT ||--o{ PROCUREMENT : includes
+    PROJECT {
+        int id
+        string code
+        float allocated_budget
+    }
+
+    BUDGET_LOGS ||--|| PROJECT : logs
+```
+
+# License
+Proprietary — Internal Use Only.
+
+# Support
+Contact IMM Administrator.
