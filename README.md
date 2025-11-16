@@ -445,3 +445,64 @@ Proprietary — Internal Use Only.
 
 # Support
 Contact IMM Administrator.
+
+## 📌 Sitemap
+
+### Dashboard
+- **Indicators**
+  - Vendors
+  - Projects
+  - Procurements
+  - Enquiry Generated
+  - CST
+  - For Negotiation
+  - DPO
+  - PO
+  - Delivery
+- **Tables**
+  - Top 5 Vendors
+  - Procurement Table
+
+### INBOX
+- Received PR
+- Returned PR
+
+### Approved PR
+- PR List
+- Enquiry Form
+- CST
+- Negotiation
+
+### Registration
+- Project
+- User Registration
+- Vendor Master
+- PO Create
+- Reset Password
+
+### MIS
+- **Indicators**
+  - Procurements
+  - Planned
+  - Committed
+  - Expenditure
+- **Table View**
+- **Query Filters**
+
+### DPO
+- Filters
+
+### Invoice
+- Filters
+
+### PO
+- Filters
+
+### Tracking
+- Filters
+
+### Profile
+- Profile Overview / Settings
+
+### Feedback
+- Free Text Input
