@@ -208,3 +208,118 @@ Only models explicitly provided are included.
 ### 9.5 Invoice_Files
 
 **Purpose:** Stores vendor invoices.
+
+
+# PR Creation Prerequisites & Workflow
+
+## 1. Prerequisites for Generating a Purchase Requisition (PR)
+
+Before creating a PR, the following master data must be configured:
+
+### Step 1 -- Create Roles
+
+Required approval hierarchy roles: - Indentor - Recommending Authority
+(RA) - IMM - Accounts - Approving Authority
+
+### Step 2 -- Create Departments
+
+Each department must include: - Department Name - Department Code
+
+### Step 3 -- Create Delivery Types
+
+Configure: - Delivery Name
+
+### Step 4 -- Create Procurement Types
+
+Include: - Procurement Code - Procurement Name
+
+### Step 5 -- Create Locations
+
+Define the full list of applicable locations.
+
+### Step 6 -- Create Tender Types
+
+Setup tender type master data.
+
+### Step 7 -- Create Source of Make
+
+Each source requires: - Source Code - Source Type
+
+### Step 8 -- Create Units
+
+Add all required units of measurement (UOM).
+
+------------------------------------------------------------------------
+
+## 2. Purchase Requisition (PR) Generation Workflow
+
+### 1. PR Creation (Indentor)
+
+-   The Indentor initiates the PR and fills all required fields in the
+    PR Form.
+
+### 2. Review by Recommending Authority (RA)
+
+-   After submission, the PR moves to the RA for verification and
+    approval.
+
+### 3. RA Approval
+
+-   RA reviews the details and approves the PR.
+
+### 4. PR Forwarded to IMM
+
+-   After RA approval, the PR is sent to the IMM department for further
+    processing.
+
+### 5. IMM Review
+
+-   IMM reviews the form and forwards it to the Accounts role.
+
+### 6. Accounts Review
+
+-   Accounts verifies the PR and recommends it to the Approving
+    Authority.
+
+### 7. Return & Modification Rules
+
+-   Any higher authority can return the PR to a lower authority.
+-   Only the Indentor (original creator) can make modifications.
+
+### 8. Enquiry Form Generation
+
+-   After approval, IMM generates the Enquiry Form.
+-   Vendor quotations are uploaded in this stage.
+
+### 9. CST Generation
+
+-   The Comparative Statement (CST) is generated.
+-   CST is approved by IMM and recommended to the Indentor.
+
+### 10. Indentor Review
+
+-   Indentor reviews CST and recommends it to RA.
+-   If negotiation is required, Indentor triggers negotiation.
+
+### 11. RA Review
+
+-   RA reviews and submits the form, recommending it to IMM.
+
+### 12. Negotiation or DPO Creation
+
+-   If negotiation occurs OR if RA submits, the PR moves to the DPO
+    (Draft PO) stage.
+
+### 13. IMM Review for DPO
+
+-   IMM reviews the DPO and recommends it to Accounts.
+
+### 14. Accounts Approval
+
+-   Accounts approves the DPO and cycle may repeat if required.
+
+### 15. Final PO Approval & Sign Upload
+
+-   After final PO approval, the designated user uploads the approved
+    and signed copy.
+
