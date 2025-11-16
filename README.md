@@ -1,7 +1,7 @@
-# IMS v2.0 – Integrated Material Management System
+# IMS – Integrated Material Management System
 
 ### Overview
-IMS v2.0 digitizes all procurement operations including vendor onboarding, approvals, comparative statements, negotiations, purchase order issuance, and budget tracking. It ensures transparency, traceability, and compliance through automated workflows and role-based access control.
+IMS digitizes all procurement operations including vendor onboarding, approvals, comparative statements, negotiations, purchase order issuance, and budget tracking. It ensures transparency, traceability, and compliance through automated workflows and role-based access control.
 
 ### System Modules & Descriptions
 
